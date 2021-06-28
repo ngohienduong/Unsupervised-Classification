@@ -1,0 +1,1337 @@
+{'setup': 'simclr', 'backbone': 'resnet18', 'model_kwargs': {'head': 'mlp', 'features_dim': 128}, 'train_db_name': 'cifar-10', 'val_db_name': 'cifar-10', 'num_classes': 10, 'criterion': 'simclr', 'criterion_kwargs': {'temperature': 0.1}, 'epochs': 100, 'optimizer': 'sgd', 'optimizer_kwargs': {'nesterov': False, 'weight_decay': 0.0001, 'momentum': 0.9, 'lr': 0.4}, 'scheduler': 'cosine', 'scheduler_kwargs': {'lr_decay_rate': 0.1}, 'batch_size': 512, 'num_workers': 8, 'augmentation_strategy': 'simclr', 'augmentation_kwargs': {'random_resized_crop': {'size': 32, 'scale': [0.2, 1.0]}, 'color_jitter_random_apply': {'p': 0.8}, 'color_jitter': {'brightness': 0.4, 'contrast': 0.4, 'saturation': 0.4, 'hue': 0.1}, 'random_grayscale': {'p': 0.2}, 'normalize': {'mean': [0.4914, 0.4822, 0.4465], 'std': [0.2023, 0.1994, 0.201]}}, 'transformation_kwargs': {'crop_size': 32, 'normalize': {'mean': [0.4914, 0.4822, 0.4465], 'std': [0.2023, 0.1994, 0.201]}}, 'pretext_dir': '/content/Untitled Folder/cifar-10/pretext', 'pretext_checkpoint': '/content/Untitled Folder/cifar-10/pretext/checkpoint.pth.tar', 'pretext_model': '/content/Untitled Folder/cifar-10/pretext/model.pth.tar', 'topk_neighbors_train_path': '/content/Untitled Folder/cifar-10/pretext/topk-train-neighbors.npy', 'topk_neighbors_val_path': '/content/Untitled Folder/cifar-10/pretext/topk-val-neighbors.npy'}
+Retrieve model
+Model is ContrastiveModel
+Model parameters: 11.50M
+ContrastiveModel(
+  (backbone): ResNet(
+    (conv1): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (layer1): Sequential(
+      (0): BasicBlock(
+        (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential()
+      )
+      (1): BasicBlock(
+        (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential()
+      )
+    )
+    (layer2): Sequential(
+      (0): BasicBlock(
+        (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential(
+          (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): BasicBlock(
+        (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential()
+      )
+    )
+    (layer3): Sequential(
+      (0): BasicBlock(
+        (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential(
+          (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): BasicBlock(
+        (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential()
+      )
+    )
+    (layer4): Sequential(
+      (0): BasicBlock(
+        (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential(
+          (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): BasicBlock(
+        (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (shortcut): Sequential()
+      )
+    )
+    (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  )
+  (contrastive_head): Sequential(
+    (0): Linear(in_features=512, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+  )
+)
+Set CuDNN benchmark
+Retrieve dataset
+Train transforms: Compose(
+    RandomResizedCrop(size=(32, 32), scale=(0.2, 1.0), ratio=(0.75, 1.3333), interpolation=bilinear)
+    ToTensor()
+    Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+)
+Validation transforms: Compose(
+    CenterCrop(size=(32, 32))
+    ToTensor()
+    Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.201])
+)
+Files already downloaded and verified
+Files already downloaded and verified
+/usr/local/lib/python3.7/dist-packages/torch/utils/data/dataloader.py:477: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  cpuset_checked))
+Dataset contains 50000/10000 train/val samples
+Build MemoryBank
+Files already downloaded and verified
+Retrieve criterion
+Criterion is SimCLRLoss
+Retrieve optimizer
+SGD (
+Parameter Group 0
+    dampening: 0
+    lr: 0.4
+    momentum: 0.9
+    nesterov: False
+    weight_decay: 0.0001
+)
+No checkpoint file at /content/Untitled Folder/cifar-10/pretext/checkpoint.pth.tar
+Starting main loop
+Epoch 0/100
+---------------
+Adjusted learning rate to 0.40000
+Train ...
+Epoch: [0][ 0/97]	Loss 6.6303e+00 (6.6303e+00)
+Epoch: [0][25/97]	Loss 4.8677e+00 (5.5774e+00)
+Epoch: [0][50/97]	Loss 4.3053e+00 (5.1511e+00)
+Epoch: [0][75/97]	Loss 4.0337e+00 (4.8237e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 26.76
+Checkpoint ...
+Epoch 1/100
+---------------
+Adjusted learning rate to 0.39990
+Train ...
+Epoch: [1][ 0/97]	Loss 3.9087e+00 (3.9087e+00)
+Epoch: [1][25/97]	Loss 3.5701e+00 (3.7076e+00)
+Epoch: [1][50/97]	Loss 3.4686e+00 (3.6144e+00)
+Epoch: [1][75/97]	Loss 3.4453e+00 (3.5706e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 27.70
+Checkpoint ...
+Epoch 2/100
+---------------
+Adjusted learning rate to 0.39961
+Train ...
+Epoch: [2][ 0/97]	Loss 3.3435e+00 (3.3435e+00)
+Epoch: [2][25/97]	Loss 3.3606e+00 (3.4103e+00)
+Epoch: [2][50/97]	Loss 3.3446e+00 (3.4003e+00)
+Epoch: [2][75/97]	Loss 3.3292e+00 (3.3881e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 28.68
+Checkpoint ...
+Epoch 3/100
+---------------
+Adjusted learning rate to 0.39911
+Train ...
+Epoch: [3][ 0/97]	Loss 3.3156e+00 (3.3156e+00)
+Epoch: [3][25/97]	Loss 3.2928e+00 (3.3325e+00)
+Epoch: [3][50/97]	Loss 3.0943e+00 (3.2759e+00)
+Epoch: [3][75/97]	Loss 2.7273e+00 (3.1604e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 33.32
+Checkpoint ...
+Epoch 4/100
+---------------
+Adjusted learning rate to 0.39842
+Train ...
+Epoch: [4][ 0/97]	Loss 2.5428e+00 (2.5428e+00)
+Epoch: [4][25/97]	Loss 2.3549e+00 (2.4554e+00)
+Epoch: [4][50/97]	Loss 2.2757e+00 (2.3785e+00)
+Epoch: [4][75/97]	Loss 2.0469e+00 (2.2903e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 37.26
+Checkpoint ...
+Epoch 5/100
+---------------
+Adjusted learning rate to 0.39754
+Train ...
+Epoch: [5][ 0/97]	Loss 1.9758e+00 (1.9758e+00)
+Epoch: [5][25/97]	Loss 1.8275e+00 (1.8915e+00)
+Epoch: [5][50/97]	Loss 1.8478e+00 (1.8561e+00)
+Epoch: [5][75/97]	Loss 1.6533e+00 (1.8067e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 38.51
+Checkpoint ...
+Epoch 6/100
+---------------
+Adjusted learning rate to 0.39646
+Train ...
+Epoch: [6][ 0/97]	Loss 1.5818e+00 (1.5818e+00)
+Epoch: [6][25/97]	Loss 1.5130e+00 (1.5265e+00)
+Epoch: [6][50/97]	Loss 1.3438e+00 (1.4838e+00)
+Epoch: [6][75/97]	Loss 1.3057e+00 (1.4421e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 41.40
+Checkpoint ...
+Epoch 7/100
+---------------
+Adjusted learning rate to 0.39519
+Train ...
+Epoch: [7][ 0/97]	Loss 1.2390e+00 (1.2390e+00)
+Epoch: [7][25/97]	Loss 1.2342e+00 (1.2165e+00)
+Epoch: [7][50/97]	Loss 1.2103e+00 (1.1917e+00)
+Epoch: [7][75/97]	Loss 1.1753e+00 (1.1707e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 43.22
+Checkpoint ...
+Epoch 8/100
+---------------
+Adjusted learning rate to 0.39372
+Train ...
+Epoch: [8][ 0/97]	Loss 1.0806e+00 (1.0806e+00)
+Epoch: [8][25/97]	Loss 1.0195e+00 (1.0750e+00)
+Epoch: [8][50/97]	Loss 1.0226e+00 (1.0504e+00)
+Epoch: [8][75/97]	Loss 1.0579e+00 (1.0408e+00)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 44.24
+Checkpoint ...
+Epoch 9/100
+---------------
+Adjusted learning rate to 0.39207
+Train ...
+Epoch: [9][ 0/97]	Loss 9.8311e-01 (9.8311e-01)
+Epoch: [9][25/97]	Loss 9.0896e-01 (9.4196e-01)
+Epoch: [9][50/97]	Loss 8.6309e-01 (9.2342e-01)
+Epoch: [9][75/97]	Loss 8.7521e-01 (9.1380e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 46.07
+Checkpoint ...
+Epoch 10/100
+---------------
+Adjusted learning rate to 0.39022
+Train ...
+Epoch: [10][ 0/97]	Loss 8.5084e-01 (8.5084e-01)
+Epoch: [10][25/97]	Loss 8.2232e-01 (8.4750e-01)
+Epoch: [10][50/97]	Loss 7.9121e-01 (8.2095e-01)
+Epoch: [10][75/97]	Loss 7.9232e-01 (8.1198e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 45.87
+Checkpoint ...
+Epoch 11/100
+---------------
+Adjusted learning rate to 0.38819
+Train ...
+Epoch: [11][ 0/97]	Loss 7.4515e-01 (7.4515e-01)
+Epoch: [11][25/97]	Loss 7.7260e-01 (7.5691e-01)
+Epoch: [11][50/97]	Loss 7.5686e-01 (7.5947e-01)
+Epoch: [11][75/97]	Loss 7.4563e-01 (7.5453e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 47.27
+Checkpoint ...
+Epoch 12/100
+---------------
+Adjusted learning rate to 0.38597
+Train ...
+Epoch: [12][ 0/97]	Loss 7.2265e-01 (7.2265e-01)
+Epoch: [12][25/97]	Loss 7.5769e-01 (7.1437e-01)
+Epoch: [12][50/97]	Loss 7.4968e-01 (7.0669e-01)
+Epoch: [12][75/97]	Loss 6.0364e-01 (7.0315e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 47.36
+Checkpoint ...
+Epoch 13/100
+---------------
+Adjusted learning rate to 0.38357
+Train ...
+Epoch: [13][ 0/97]	Loss 6.1037e-01 (6.1037e-01)
+Epoch: [13][25/97]	Loss 6.9306e-01 (6.8468e-01)
+Epoch: [13][50/97]	Loss 6.5734e-01 (6.7928e-01)
+Epoch: [13][75/97]	Loss 6.6233e-01 (6.7418e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 48.64
+Checkpoint ...
+Epoch 14/100
+---------------
+Adjusted learning rate to 0.38098
+Train ...
+Epoch: [14][ 0/97]	Loss 6.4078e-01 (6.4078e-01)
+Epoch: [14][25/97]	Loss 6.0162e-01 (6.4598e-01)
+Epoch: [14][50/97]	Loss 6.2726e-01 (6.3360e-01)
+Epoch: [14][75/97]	Loss 6.4786e-01 (6.3438e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 48.90
+Checkpoint ...
+Epoch 15/100
+---------------
+Adjusted learning rate to 0.37822
+Train ...
+Epoch: [15][ 0/97]	Loss 6.4885e-01 (6.4885e-01)
+Epoch: [15][25/97]	Loss 6.0121e-01 (6.0719e-01)
+Epoch: [15][50/97]	Loss 6.3518e-01 (6.0880e-01)
+Epoch: [15][75/97]	Loss 6.4636e-01 (6.0728e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 49.90
+Checkpoint ...
+Epoch 16/100
+---------------
+Adjusted learning rate to 0.37529
+Train ...
+Epoch: [16][ 0/97]	Loss 5.1146e-01 (5.1146e-01)
+Epoch: [16][25/97]	Loss 5.6717e-01 (5.9153e-01)
+Epoch: [16][50/97]	Loss 5.5725e-01 (5.8122e-01)
+Epoch: [16][75/97]	Loss 6.0523e-01 (5.7954e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 49.65
+Checkpoint ...
+Epoch 17/100
+---------------
+Adjusted learning rate to 0.37218
+Train ...
+Epoch: [17][ 0/97]	Loss 5.4613e-01 (5.4613e-01)
+Epoch: [17][25/97]	Loss 6.3364e-01 (5.6939e-01)
+Epoch: [17][50/97]	Loss 5.6597e-01 (5.6203e-01)
+Epoch: [17][75/97]	Loss 5.4229e-01 (5.6244e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 50.58
+Checkpoint ...
+Epoch 18/100
+---------------
+Adjusted learning rate to 0.36890
+Train ...
+Epoch: [18][ 0/97]	Loss 5.4237e-01 (5.4237e-01)
+Epoch: [18][25/97]	Loss 5.5357e-01 (5.5037e-01)
+Epoch: [18][50/97]	Loss 5.3848e-01 (5.4918e-01)
+Epoch: [18][75/97]	Loss 5.4929e-01 (5.4310e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 51.02
+Checkpoint ...
+Epoch 19/100
+---------------
+Adjusted learning rate to 0.36545
+Train ...
+Epoch: [19][ 0/97]	Loss 5.7025e-01 (5.7025e-01)
+Epoch: [19][25/97]	Loss 5.9944e-01 (5.4154e-01)
+Epoch: [19][50/97]	Loss 5.6310e-01 (5.3751e-01)
+Epoch: [19][75/97]	Loss 5.2597e-01 (5.3094e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.00
+Checkpoint ...
+Epoch 20/100
+---------------
+Adjusted learning rate to 0.36184
+Train ...
+Epoch: [20][ 0/97]	Loss 5.2836e-01 (5.2836e-01)
+Epoch: [20][25/97]	Loss 4.7262e-01 (5.0439e-01)
+Epoch: [20][50/97]	Loss 4.7025e-01 (5.0682e-01)
+Epoch: [20][75/97]	Loss 4.7842e-01 (5.0634e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 51.67
+Checkpoint ...
+Epoch 21/100
+---------------
+Adjusted learning rate to 0.35807
+Train ...
+Epoch: [21][ 0/97]	Loss 4.8199e-01 (4.8199e-01)
+Epoch: [21][25/97]	Loss 5.4872e-01 (5.1842e-01)
+Epoch: [21][50/97]	Loss 4.6311e-01 (5.1374e-01)
+Epoch: [21][75/97]	Loss 5.0600e-01 (5.0928e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 51.83
+Checkpoint ...
+Epoch 22/100
+---------------
+Adjusted learning rate to 0.35415
+Train ...
+Epoch: [22][ 0/97]	Loss 5.4216e-01 (5.4216e-01)
+Epoch: [22][25/97]	Loss 5.0162e-01 (4.8872e-01)
+Epoch: [22][50/97]	Loss 4.6950e-01 (4.8755e-01)
+Epoch: [22][75/97]	Loss 4.5895e-01 (4.8829e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 51.81
+Checkpoint ...
+Epoch 23/100
+---------------
+Adjusted learning rate to 0.35007
+Train ...
+Epoch: [23][ 0/97]	Loss 4.7320e-01 (4.7320e-01)
+Epoch: [23][25/97]	Loss 4.9318e-01 (4.9766e-01)
+Epoch: [23][50/97]	Loss 5.2081e-01 (4.9285e-01)
+Epoch: [23][75/97]	Loss 4.7205e-01 (4.8651e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.66
+Checkpoint ...
+Epoch 24/100
+---------------
+Adjusted learning rate to 0.34585
+Train ...
+Epoch: [24][ 0/97]	Loss 5.0381e-01 (5.0381e-01)
+Epoch: [24][25/97]	Loss 4.9491e-01 (4.8723e-01)
+Epoch: [24][50/97]	Loss 4.7882e-01 (4.8211e-01)
+Epoch: [24][75/97]	Loss 4.7988e-01 (4.8094e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.08
+Checkpoint ...
+Epoch 25/100
+---------------
+Adjusted learning rate to 0.34148
+Train ...
+Epoch: [25][ 0/97]	Loss 4.3019e-01 (4.3019e-01)
+Epoch: [25][25/97]	Loss 4.8419e-01 (4.6903e-01)
+Epoch: [25][50/97]	Loss 4.5997e-01 (4.7235e-01)
+Epoch: [25][75/97]	Loss 4.4607e-01 (4.6842e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.07
+Checkpoint ...
+Epoch 26/100
+---------------
+Adjusted learning rate to 0.33697
+Train ...
+Epoch: [26][ 0/97]	Loss 4.2206e-01 (4.2206e-01)
+Epoch: [26][25/97]	Loss 4.5345e-01 (4.6030e-01)
+Epoch: [26][50/97]	Loss 4.6148e-01 (4.5618e-01)
+Epoch: [26][75/97]	Loss 5.0032e-01 (4.5610e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 51.88
+Checkpoint ...
+Epoch 27/100
+---------------
+Adjusted learning rate to 0.33233
+Train ...
+Epoch: [27][ 0/97]	Loss 4.7556e-01 (4.7556e-01)
+Epoch: [27][25/97]	Loss 4.9137e-01 (4.5412e-01)
+Epoch: [27][50/97]	Loss 4.4796e-01 (4.4821e-01)
+Epoch: [27][75/97]	Loss 4.4265e-01 (4.4730e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.75
+Checkpoint ...
+Epoch 28/100
+---------------
+Adjusted learning rate to 0.32756
+Train ...
+Epoch: [28][ 0/97]	Loss 4.3549e-01 (4.3549e-01)
+Epoch: [28][25/97]	Loss 4.1955e-01 (4.3354e-01)
+Epoch: [28][50/97]	Loss 4.5011e-01 (4.3026e-01)
+Epoch: [28][75/97]	Loss 4.2590e-01 (4.3293e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.25
+Checkpoint ...
+Epoch 29/100
+---------------
+Adjusted learning rate to 0.32266
+Train ...
+Epoch: [29][ 0/97]	Loss 4.6590e-01 (4.6590e-01)
+Epoch: [29][25/97]	Loss 4.4667e-01 (4.3123e-01)
+Epoch: [29][50/97]	Loss 4.2293e-01 (4.3353e-01)
+Epoch: [29][75/97]	Loss 4.0883e-01 (4.3180e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 53.60
+Checkpoint ...
+Epoch 30/100
+---------------
+Adjusted learning rate to 0.31764
+Train ...
+Epoch: [30][ 0/97]	Loss 4.5182e-01 (4.5182e-01)
+Epoch: [30][25/97]	Loss 3.7864e-01 (4.3812e-01)
+Epoch: [30][50/97]	Loss 4.5428e-01 (4.3268e-01)
+Epoch: [30][75/97]	Loss 4.2554e-01 (4.3361e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 52.89
+Checkpoint ...
+Epoch 31/100
+---------------
+Adjusted learning rate to 0.31250
+Train ...
+Epoch: [31][ 0/97]	Loss 4.4163e-01 (4.4163e-01)
+Epoch: [31][25/97]	Loss 4.1561e-01 (4.2011e-01)
+Epoch: [31][50/97]	Loss 3.9866e-01 (4.2543e-01)
+Epoch: [31][75/97]	Loss 3.8368e-01 (4.2496e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 53.20
+Checkpoint ...
+Epoch 32/100
+---------------
+Adjusted learning rate to 0.30726
+Train ...
+Epoch: [32][ 0/97]	Loss 3.8741e-01 (3.8741e-01)
+Epoch: [32][25/97]	Loss 4.2843e-01 (4.2067e-01)
+Epoch: [32][50/97]	Loss 4.2595e-01 (4.1296e-01)
+Epoch: [32][75/97]	Loss 3.8588e-01 (4.1213e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 53.29
+Checkpoint ...
+Epoch 33/100
+---------------
+Adjusted learning rate to 0.30191
+Train ...
+Epoch: [33][ 0/97]	Loss 4.0737e-01 (4.0737e-01)
+Epoch: [33][25/97]	Loss 3.6566e-01 (4.2213e-01)
+Epoch: [33][50/97]	Loss 4.6334e-01 (4.1920e-01)
+Epoch: [33][75/97]	Loss 4.4330e-01 (4.1603e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 53.32
+Checkpoint ...
+Epoch 34/100
+---------------
+Adjusted learning rate to 0.29645
+Train ...
+Epoch: [34][ 0/97]	Loss 4.3113e-01 (4.3113e-01)
+Epoch: [34][25/97]	Loss 4.0491e-01 (4.0715e-01)
+Epoch: [34][50/97]	Loss 3.4756e-01 (4.0549e-01)
+Epoch: [34][75/97]	Loss 4.2308e-01 (4.0731e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 54.43
+Checkpoint ...
+Epoch 35/100
+---------------
+Adjusted learning rate to 0.29091
+Train ...
+Epoch: [35][ 0/97]	Loss 3.7912e-01 (3.7912e-01)
+Epoch: [35][25/97]	Loss 4.2354e-01 (3.9933e-01)
+Epoch: [35][50/97]	Loss 4.0000e-01 (3.9695e-01)
+Epoch: [35][75/97]	Loss 4.0598e-01 (3.9588e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.41
+Checkpoint ...
+Epoch 36/100
+---------------
+Adjusted learning rate to 0.28527
+Train ...
+Epoch: [36][ 0/97]	Loss 3.7991e-01 (3.7991e-01)
+Epoch: [36][25/97]	Loss 3.9811e-01 (3.9678e-01)
+Epoch: [36][50/97]	Loss 3.5758e-01 (3.9499e-01)
+Epoch: [36][75/97]	Loss 3.9044e-01 (3.9631e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 54.60
+Checkpoint ...
+Epoch 37/100
+---------------
+Adjusted learning rate to 0.27955
+Train ...
+Epoch: [37][ 0/97]	Loss 3.9532e-01 (3.9532e-01)
+Epoch: [37][25/97]	Loss 3.9426e-01 (3.9538e-01)
+Epoch: [37][50/97]	Loss 4.2114e-01 (3.9622e-01)
+Epoch: [37][75/97]	Loss 3.9366e-01 (3.9449e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 54.35
+Checkpoint ...
+Epoch 38/100
+---------------
+Adjusted learning rate to 0.27375
+Train ...
+Epoch: [38][ 0/97]	Loss 3.9573e-01 (3.9573e-01)
+Epoch: [38][25/97]	Loss 3.6151e-01 (3.8583e-01)
+Epoch: [38][50/97]	Loss 4.1485e-01 (3.9061e-01)
+Epoch: [38][75/97]	Loss 3.8348e-01 (3.8887e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.38
+Checkpoint ...
+Epoch 39/100
+---------------
+Adjusted learning rate to 0.26788
+Train ...
+Epoch: [39][ 0/97]	Loss 3.4909e-01 (3.4909e-01)
+Epoch: [39][25/97]	Loss 4.2783e-01 (3.8002e-01)
+Epoch: [39][50/97]	Loss 3.6980e-01 (3.8697e-01)
+Epoch: [39][75/97]	Loss 3.5123e-01 (3.8399e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 54.28
+Checkpoint ...
+Epoch 40/100
+---------------
+Adjusted learning rate to 0.26194
+Train ...
+Epoch: [40][ 0/97]	Loss 4.2875e-01 (4.2875e-01)
+Epoch: [40][25/97]	Loss 4.2557e-01 (3.7945e-01)
+Epoch: [40][50/97]	Loss 4.1551e-01 (3.8114e-01)
+Epoch: [40][75/97]	Loss 4.1240e-01 (3.7958e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 54.44
+Checkpoint ...
+Epoch 41/100
+---------------
+Adjusted learning rate to 0.25594
+Train ...
+Epoch: [41][ 0/97]	Loss 3.8687e-01 (3.8687e-01)
+Epoch: [41][25/97]	Loss 3.6605e-01 (3.7799e-01)
+Epoch: [41][50/97]	Loss 3.4558e-01 (3.7786e-01)
+Epoch: [41][75/97]	Loss 3.7293e-01 (3.7355e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.61
+Checkpoint ...
+Epoch 42/100
+---------------
+Adjusted learning rate to 0.24989
+Train ...
+Epoch: [42][ 0/97]	Loss 3.9813e-01 (3.9813e-01)
+Epoch: [42][25/97]	Loss 3.9919e-01 (3.7224e-01)
+Epoch: [42][50/97]	Loss 3.6874e-01 (3.6989e-01)
+Epoch: [42][75/97]	Loss 3.6579e-01 (3.6730e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.58
+Checkpoint ...
+Epoch 43/100
+---------------
+Adjusted learning rate to 0.24379
+Train ...
+Epoch: [43][ 0/97]	Loss 3.7366e-01 (3.7366e-01)
+Epoch: [43][25/97]	Loss 3.6542e-01 (3.6454e-01)
+Epoch: [43][50/97]	Loss 3.2581e-01 (3.6508e-01)
+Epoch: [43][75/97]	Loss 3.6681e-01 (3.6292e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.50
+Checkpoint ...
+Epoch 44/100
+---------------
+Adjusted learning rate to 0.23764
+Train ...
+Epoch: [44][ 0/97]	Loss 3.8038e-01 (3.8038e-01)
+Epoch: [44][25/97]	Loss 3.8922e-01 (3.6740e-01)
+Epoch: [44][50/97]	Loss 3.8909e-01 (3.6660e-01)
+Epoch: [44][75/97]	Loss 3.3755e-01 (3.6451e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.45
+Checkpoint ...
+Epoch 45/100
+---------------
+Adjusted learning rate to 0.23146
+Train ...
+Epoch: [45][ 0/97]	Loss 3.4521e-01 (3.4521e-01)
+Epoch: [45][25/97]	Loss 3.8357e-01 (3.5231e-01)
+Epoch: [45][50/97]	Loss 3.0979e-01 (3.5173e-01)
+Epoch: [45][75/97]	Loss 3.9270e-01 (3.5447e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.57
+Checkpoint ...
+Epoch 46/100
+---------------
+Adjusted learning rate to 0.22524
+Train ...
+Epoch: [46][ 0/97]	Loss 3.4603e-01 (3.4603e-01)
+Epoch: [46][25/97]	Loss 3.8297e-01 (3.5363e-01)
+Epoch: [46][50/97]	Loss 3.7411e-01 (3.5516e-01)
+Epoch: [46][75/97]	Loss 3.7117e-01 (3.5468e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 54.87
+Checkpoint ...
+Epoch 47/100
+---------------
+Adjusted learning rate to 0.21900
+Train ...
+Epoch: [47][ 0/97]	Loss 3.2313e-01 (3.2313e-01)
+Epoch: [47][25/97]	Loss 3.5699e-01 (3.5140e-01)
+Epoch: [47][50/97]	Loss 3.2966e-01 (3.5284e-01)
+Epoch: [47][75/97]	Loss 3.4919e-01 (3.5365e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.48
+Checkpoint ...
+Epoch 48/100
+---------------
+Adjusted learning rate to 0.21275
+Train ...
+Epoch: [48][ 0/97]	Loss 3.5282e-01 (3.5282e-01)
+Epoch: [48][25/97]	Loss 3.2431e-01 (3.4478e-01)
+Epoch: [48][50/97]	Loss 3.4325e-01 (3.4360e-01)
+Epoch: [48][75/97]	Loss 3.4047e-01 (3.4446e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.76
+Checkpoint ...
+Epoch 49/100
+---------------
+Adjusted learning rate to 0.20648
+Train ...
+Epoch: [49][ 0/97]	Loss 3.3178e-01 (3.3178e-01)
+Epoch: [49][25/97]	Loss 3.1369e-01 (3.4580e-01)
+Epoch: [49][50/97]	Loss 3.3370e-01 (3.4400e-01)
+Epoch: [49][75/97]	Loss 3.2258e-01 (3.4077e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.86
+Checkpoint ...
+Epoch 50/100
+---------------
+Adjusted learning rate to 0.20020
+Train ...
+Epoch: [50][ 0/97]	Loss 3.8861e-01 (3.8861e-01)
+Epoch: [50][25/97]	Loss 3.6690e-01 (3.3704e-01)
+Epoch: [50][50/97]	Loss 3.6403e-01 (3.3945e-01)
+Epoch: [50][75/97]	Loss 3.6043e-01 (3.4131e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.86
+Checkpoint ...
+Epoch 51/100
+---------------
+Adjusted learning rate to 0.19392
+Train ...
+Epoch: [51][ 0/97]	Loss 3.2223e-01 (3.2223e-01)
+Epoch: [51][25/97]	Loss 3.3581e-01 (3.3532e-01)
+Epoch: [51][50/97]	Loss 3.2024e-01 (3.3325e-01)
+Epoch: [51][75/97]	Loss 3.3384e-01 (3.3341e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.23
+Checkpoint ...
+Epoch 52/100
+---------------
+Adjusted learning rate to 0.18765
+Train ...
+Epoch: [52][ 0/97]	Loss 2.8666e-01 (2.8666e-01)
+Epoch: [52][25/97]	Loss 3.4561e-01 (3.3206e-01)
+Epoch: [52][50/97]	Loss 3.0649e-01 (3.3228e-01)
+Epoch: [52][75/97]	Loss 3.3492e-01 (3.3280e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.26
+Checkpoint ...
+Epoch 53/100
+---------------
+Adjusted learning rate to 0.18140
+Train ...
+Epoch: [53][ 0/97]	Loss 3.0210e-01 (3.0210e-01)
+Epoch: [53][25/97]	Loss 3.5209e-01 (3.2245e-01)
+Epoch: [53][50/97]	Loss 3.2440e-01 (3.2497e-01)
+Epoch: [53][75/97]	Loss 3.2049e-01 (3.2681e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.13
+Checkpoint ...
+Epoch 54/100
+---------------
+Adjusted learning rate to 0.17516
+Train ...
+Epoch: [54][ 0/97]	Loss 3.1914e-01 (3.1914e-01)
+Epoch: [54][25/97]	Loss 3.1456e-01 (3.2233e-01)
+Epoch: [54][50/97]	Loss 2.8834e-01 (3.2226e-01)
+Epoch: [54][75/97]	Loss 3.4755e-01 (3.2292e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.71
+Checkpoint ...
+Epoch 55/100
+---------------
+Adjusted learning rate to 0.16894
+Train ...
+Epoch: [55][ 0/97]	Loss 2.9490e-01 (2.9490e-01)
+Epoch: [55][25/97]	Loss 3.4826e-01 (3.1738e-01)
+Epoch: [55][50/97]	Loss 3.3581e-01 (3.1823e-01)
+Epoch: [55][75/97]	Loss 3.0108e-01 (3.2011e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 55.89
+Checkpoint ...
+Epoch 56/100
+---------------
+Adjusted learning rate to 0.16276
+Train ...
+Epoch: [56][ 0/97]	Loss 3.4310e-01 (3.4310e-01)
+Epoch: [56][25/97]	Loss 3.0772e-01 (3.1398e-01)
+Epoch: [56][50/97]	Loss 3.1952e-01 (3.1696e-01)
+Epoch: [56][75/97]	Loss 3.4585e-01 (3.1770e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.40
+Checkpoint ...
+Epoch 57/100
+---------------
+Adjusted learning rate to 0.15661
+Train ...
+Epoch: [57][ 0/97]	Loss 2.8748e-01 (2.8748e-01)
+Epoch: [57][25/97]	Loss 3.0431e-01 (3.2256e-01)
+Epoch: [57][50/97]	Loss 3.0076e-01 (3.2051e-01)
+Epoch: [57][75/97]	Loss 3.2801e-01 (3.1809e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.49
+Checkpoint ...
+Epoch 58/100
+---------------
+Adjusted learning rate to 0.15051
+Train ...
+Epoch: [58][ 0/97]	Loss 3.1782e-01 (3.1782e-01)
+Epoch: [58][25/97]	Loss 2.6867e-01 (3.0404e-01)
+Epoch: [58][50/97]	Loss 2.8896e-01 (3.0594e-01)
+Epoch: [58][75/97]	Loss 3.2180e-01 (3.0835e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.90
+Checkpoint ...
+Epoch 59/100
+---------------
+Adjusted learning rate to 0.14446
+Train ...
+Epoch: [59][ 0/97]	Loss 2.8705e-01 (2.8705e-01)
+Epoch: [59][25/97]	Loss 3.1482e-01 (3.0513e-01)
+Epoch: [59][50/97]	Loss 2.7318e-01 (3.0366e-01)
+Epoch: [59][75/97]	Loss 2.8411e-01 (3.0294e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.03
+Checkpoint ...
+Epoch 60/100
+---------------
+Adjusted learning rate to 0.13846
+Train ...
+Epoch: [60][ 0/97]	Loss 3.2519e-01 (3.2519e-01)
+Epoch: [60][25/97]	Loss 3.2648e-01 (3.0538e-01)
+Epoch: [60][50/97]	Loss 2.7261e-01 (3.0423e-01)
+Epoch: [60][75/97]	Loss 2.7977e-01 (3.0446e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.15
+Checkpoint ...
+Epoch 61/100
+---------------
+Adjusted learning rate to 0.13252
+Train ...
+Epoch: [61][ 0/97]	Loss 3.0256e-01 (3.0256e-01)
+Epoch: [61][25/97]	Loss 2.6823e-01 (2.9795e-01)
+Epoch: [61][50/97]	Loss 3.0561e-01 (3.0022e-01)
+Epoch: [61][75/97]	Loss 2.8418e-01 (2.9984e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.41
+Checkpoint ...
+Epoch 62/100
+---------------
+Adjusted learning rate to 0.12665
+Train ...
+Epoch: [62][ 0/97]	Loss 3.0362e-01 (3.0362e-01)
+Epoch: [62][25/97]	Loss 3.0670e-01 (2.9764e-01)
+Epoch: [62][50/97]	Loss 2.8652e-01 (2.9754e-01)
+Epoch: [62][75/97]	Loss 2.9183e-01 (2.9915e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.76
+Checkpoint ...
+Epoch 63/100
+---------------
+Adjusted learning rate to 0.12085
+Train ...
+Epoch: [63][ 0/97]	Loss 2.4494e-01 (2.4494e-01)
+Epoch: [63][25/97]	Loss 3.1560e-01 (2.9049e-01)
+Epoch: [63][50/97]	Loss 3.1436e-01 (2.9020e-01)
+Epoch: [63][75/97]	Loss 2.7521e-01 (2.9163e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 56.57
+Checkpoint ...
+Epoch 64/100
+---------------
+Adjusted learning rate to 0.11513
+Train ...
+Epoch: [64][ 0/97]	Loss 2.8871e-01 (2.8871e-01)
+Epoch: [64][25/97]	Loss 2.8964e-01 (2.9471e-01)
+Epoch: [64][50/97]	Loss 2.7682e-01 (2.9042e-01)
+Epoch: [64][75/97]	Loss 2.8798e-01 (2.9168e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.33
+Checkpoint ...
+Epoch 65/100
+---------------
+Adjusted learning rate to 0.10949
+Train ...
+Epoch: [65][ 0/97]	Loss 2.8376e-01 (2.8376e-01)
+Epoch: [65][25/97]	Loss 2.7498e-01 (2.8726e-01)
+Epoch: [65][50/97]	Loss 2.9293e-01 (2.8716e-01)
+Epoch: [65][75/97]	Loss 2.6108e-01 (2.8716e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.17
+Checkpoint ...
+Epoch 66/100
+---------------
+Adjusted learning rate to 0.10395
+Train ...
+Epoch: [66][ 0/97]	Loss 2.7737e-01 (2.7737e-01)
+Epoch: [66][25/97]	Loss 2.8272e-01 (2.8829e-01)
+Epoch: [66][50/97]	Loss 2.6017e-01 (2.8507e-01)
+Epoch: [66][75/97]	Loss 2.9647e-01 (2.8704e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.78
+Checkpoint ...
+Epoch 67/100
+---------------
+Adjusted learning rate to 0.09849
+Train ...
+Epoch: [67][ 0/97]	Loss 3.2242e-01 (3.2242e-01)
+Epoch: [67][25/97]	Loss 2.5953e-01 (2.7500e-01)
+Epoch: [67][50/97]	Loss 2.8899e-01 (2.7807e-01)
+Epoch: [67][75/97]	Loss 2.7660e-01 (2.8024e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.67
+Checkpoint ...
+Epoch 68/100
+---------------
+Adjusted learning rate to 0.09314
+Train ...
+Epoch: [68][ 0/97]	Loss 2.7372e-01 (2.7372e-01)
+Epoch: [68][25/97]	Loss 2.8071e-01 (2.7643e-01)
+Epoch: [68][50/97]	Loss 2.9008e-01 (2.7610e-01)
+Epoch: [68][75/97]	Loss 2.3989e-01 (2.7671e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.83
+Checkpoint ...
+Epoch 69/100
+---------------
+Adjusted learning rate to 0.08790
+Train ...
+Epoch: [69][ 0/97]	Loss 2.6886e-01 (2.6886e-01)
+Epoch: [69][25/97]	Loss 2.7858e-01 (2.6937e-01)
+Epoch: [69][50/97]	Loss 2.7582e-01 (2.6985e-01)
+Epoch: [69][75/97]	Loss 2.4693e-01 (2.7171e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.93
+Checkpoint ...
+Epoch 70/100
+---------------
+Adjusted learning rate to 0.08276
+Train ...
+Epoch: [70][ 0/97]	Loss 2.6291e-01 (2.6291e-01)
+Epoch: [70][25/97]	Loss 2.9374e-01 (2.7189e-01)
+Epoch: [70][50/97]	Loss 2.9489e-01 (2.7360e-01)
+Epoch: [70][75/97]	Loss 2.7843e-01 (2.7313e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 57.99
+Checkpoint ...
+Epoch 71/100
+---------------
+Adjusted learning rate to 0.07774
+Train ...
+Epoch: [71][ 0/97]	Loss 2.9233e-01 (2.9233e-01)
+Epoch: [71][25/97]	Loss 2.5707e-01 (2.6923e-01)
+Epoch: [71][50/97]	Loss 2.7623e-01 (2.7304e-01)
+Epoch: [71][75/97]	Loss 2.5118e-01 (2.7242e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.46
+Checkpoint ...
+Epoch 72/100
+---------------
+Adjusted learning rate to 0.07284
+Train ...
+Epoch: [72][ 0/97]	Loss 2.4829e-01 (2.4829e-01)
+Epoch: [72][25/97]	Loss 2.8421e-01 (2.7092e-01)
+Epoch: [72][50/97]	Loss 2.9798e-01 (2.6972e-01)
+Epoch: [72][75/97]	Loss 2.6023e-01 (2.6801e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.53
+Checkpoint ...
+Epoch 73/100
+---------------
+Adjusted learning rate to 0.06807
+Train ...
+Epoch: [73][ 0/97]	Loss 2.8099e-01 (2.8099e-01)
+Epoch: [73][25/97]	Loss 2.5433e-01 (2.6194e-01)
+Epoch: [73][50/97]	Loss 2.7329e-01 (2.6123e-01)
+Epoch: [73][75/97]	Loss 2.4959e-01 (2.6092e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.61
+Checkpoint ...
+Epoch 74/100
+---------------
+Adjusted learning rate to 0.06343
+Train ...
+Epoch: [74][ 0/97]	Loss 2.6342e-01 (2.6342e-01)
+Epoch: [74][25/97]	Loss 2.5956e-01 (2.6172e-01)
+Epoch: [74][50/97]	Loss 2.4646e-01 (2.6250e-01)
+Epoch: [74][75/97]	Loss 2.4371e-01 (2.6338e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.80
+Checkpoint ...
+Epoch 75/100
+---------------
+Adjusted learning rate to 0.05892
+Train ...
+Epoch: [75][ 0/97]	Loss 2.5260e-01 (2.5260e-01)
+Epoch: [75][25/97]	Loss 2.5393e-01 (2.5846e-01)
+Epoch: [75][50/97]	Loss 2.3848e-01 (2.5765e-01)
+Epoch: [75][75/97]	Loss 2.6958e-01 (2.5857e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.74
+Checkpoint ...
+Epoch 76/100
+---------------
+Adjusted learning rate to 0.05455
+Train ...
+Epoch: [76][ 0/97]	Loss 2.4093e-01 (2.4093e-01)
+Epoch: [76][25/97]	Loss 2.6435e-01 (2.5881e-01)
+Epoch: [76][50/97]	Loss 2.5765e-01 (2.5976e-01)
+Epoch: [76][75/97]	Loss 2.4494e-01 (2.5889e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.48
+Checkpoint ...
+Epoch 77/100
+---------------
+Adjusted learning rate to 0.05033
+Train ...
+Epoch: [77][ 0/97]	Loss 2.4753e-01 (2.4753e-01)
+Epoch: [77][25/97]	Loss 2.6381e-01 (2.5801e-01)
+Epoch: [77][50/97]	Loss 2.6713e-01 (2.5705e-01)
+Epoch: [77][75/97]	Loss 2.6206e-01 (2.5511e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 58.88
+Checkpoint ...
+Epoch 78/100
+---------------
+Adjusted learning rate to 0.04625
+Train ...
+Epoch: [78][ 0/97]	Loss 2.3274e-01 (2.3274e-01)
+Epoch: [78][25/97]	Loss 2.4677e-01 (2.5524e-01)
+Epoch: [78][50/97]	Loss 2.6635e-01 (2.5288e-01)
+Epoch: [78][75/97]	Loss 2.5698e-01 (2.5249e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.22
+Checkpoint ...
+Epoch 79/100
+---------------
+Adjusted learning rate to 0.04233
+Train ...
+Epoch: [79][ 0/97]	Loss 2.6209e-01 (2.6209e-01)
+Epoch: [79][25/97]	Loss 2.5588e-01 (2.5456e-01)
+Epoch: [79][50/97]	Loss 2.4918e-01 (2.5390e-01)
+Epoch: [79][75/97]	Loss 2.6041e-01 (2.5227e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.02
+Checkpoint ...
+Epoch 80/100
+---------------
+Adjusted learning rate to 0.03856
+Train ...
+Epoch: [80][ 0/97]	Loss 2.3922e-01 (2.3922e-01)
+Epoch: [80][25/97]	Loss 2.4809e-01 (2.4780e-01)
+Epoch: [80][50/97]	Loss 2.6650e-01 (2.4829e-01)
+Epoch: [80][75/97]	Loss 2.4337e-01 (2.4894e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.31
+Checkpoint ...
+Epoch 81/100
+---------------
+Adjusted learning rate to 0.03495
+Train ...
+Epoch: [81][ 0/97]	Loss 2.6299e-01 (2.6299e-01)
+Epoch: [81][25/97]	Loss 2.4500e-01 (2.4342e-01)
+Epoch: [81][50/97]	Loss 2.7432e-01 (2.4893e-01)
+Epoch: [81][75/97]	Loss 2.3727e-01 (2.4755e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.24
+Checkpoint ...
+Epoch 82/100
+---------------
+Adjusted learning rate to 0.03150
+Train ...
+Epoch: [82][ 0/97]	Loss 2.2760e-01 (2.2760e-01)
+Epoch: [82][25/97]	Loss 2.7823e-01 (2.4394e-01)
+Epoch: [82][50/97]	Loss 2.3326e-01 (2.4375e-01)
+Epoch: [82][75/97]	Loss 2.6206e-01 (2.4362e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.18
+Checkpoint ...
+Epoch 83/100
+---------------
+Adjusted learning rate to 0.02822
+Train ...
+Epoch: [83][ 0/97]	Loss 2.2242e-01 (2.2242e-01)
+Epoch: [83][25/97]	Loss 2.4402e-01 (2.3873e-01)
+Epoch: [83][50/97]	Loss 2.4827e-01 (2.4057e-01)
+Epoch: [83][75/97]	Loss 2.3084e-01 (2.4089e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.71
+Checkpoint ...
+Epoch 84/100
+---------------
+Adjusted learning rate to 0.02511
+Train ...
+Epoch: [84][ 0/97]	Loss 2.4010e-01 (2.4010e-01)
+Epoch: [84][25/97]	Loss 2.5896e-01 (2.4560e-01)
+Epoch: [84][50/97]	Loss 2.5381e-01 (2.4424e-01)
+Epoch: [84][75/97]	Loss 2.3672e-01 (2.4396e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.71
+Checkpoint ...
+Epoch 85/100
+---------------
+Adjusted learning rate to 0.02218
+Train ...
+Epoch: [85][ 0/97]	Loss 2.3117e-01 (2.3117e-01)
+Epoch: [85][25/97]	Loss 2.3063e-01 (2.3277e-01)
+Epoch: [85][50/97]	Loss 2.2443e-01 (2.3460e-01)
+Epoch: [85][75/97]	Loss 2.3094e-01 (2.3566e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.44
+Checkpoint ...
+Epoch 86/100
+---------------
+Adjusted learning rate to 0.01942
+Train ...
+Epoch: [86][ 0/97]	Loss 2.3011e-01 (2.3011e-01)
+Epoch: [86][25/97]	Loss 2.0765e-01 (2.3834e-01)
+Epoch: [86][50/97]	Loss 2.1521e-01 (2.3587e-01)
+Epoch: [86][75/97]	Loss 2.2263e-01 (2.3545e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.41
+Checkpoint ...
+Epoch 87/100
+---------------
+Adjusted learning rate to 0.01683
+Train ...
+Epoch: [87][ 0/97]	Loss 2.4299e-01 (2.4299e-01)
+Epoch: [87][25/97]	Loss 2.4843e-01 (2.3892e-01)
+Epoch: [87][50/97]	Loss 2.6167e-01 (2.4002e-01)
+Epoch: [87][75/97]	Loss 2.3235e-01 (2.3744e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.70
+Checkpoint ...
+Epoch 88/100
+---------------
+Adjusted learning rate to 0.01443
+Train ...
+Epoch: [88][ 0/97]	Loss 2.3429e-01 (2.3429e-01)
+Epoch: [88][25/97]	Loss 2.4396e-01 (2.3440e-01)
+Epoch: [88][50/97]	Loss 2.2730e-01 (2.3638e-01)
+Epoch: [88][75/97]	Loss 2.1677e-01 (2.3669e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 60.00
+Checkpoint ...
+Epoch 89/100
+---------------
+Adjusted learning rate to 0.01221
+Train ...
+Epoch: [89][ 0/97]	Loss 2.3202e-01 (2.3202e-01)
+Epoch: [89][25/97]	Loss 2.2861e-01 (2.3303e-01)
+Epoch: [89][50/97]	Loss 2.2358e-01 (2.3328e-01)
+Epoch: [89][75/97]	Loss 2.2358e-01 (2.3304e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.86
+Checkpoint ...
+Epoch 90/100
+---------------
+Adjusted learning rate to 0.01018
+Train ...
+Epoch: [90][ 0/97]	Loss 2.2435e-01 (2.2435e-01)
+Epoch: [90][25/97]	Loss 2.3306e-01 (2.3424e-01)
+Epoch: [90][50/97]	Loss 2.0323e-01 (2.3279e-01)
+Epoch: [90][75/97]	Loss 2.4392e-01 (2.3441e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.75
+Checkpoint ...
+Epoch 91/100
+---------------
+Adjusted learning rate to 0.00833
+Train ...
+Epoch: [91][ 0/97]	Loss 2.4068e-01 (2.4068e-01)
+Epoch: [91][25/97]	Loss 2.3972e-01 (2.3538e-01)
+Epoch: [91][50/97]	Loss 2.3622e-01 (2.3360e-01)
+Epoch: [91][75/97]	Loss 2.3799e-01 (2.3358e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.89
+Checkpoint ...
+Epoch 92/100
+---------------
+Adjusted learning rate to 0.00668
+Train ...
+Epoch: [92][ 0/97]	Loss 2.2883e-01 (2.2883e-01)
+Epoch: [92][25/97]	Loss 2.4423e-01 (2.3454e-01)
+Epoch: [92][50/97]	Loss 2.2792e-01 (2.3366e-01)
+Epoch: [92][75/97]	Loss 2.2870e-01 (2.3333e-01)
+Fill memory bank for kNN...
+Fill Memory Bank [0/98]
+Evaluate ...
+Result of kNN evaluation is 59.70
+Checkpoint ...
+Epoch 93/100
+---------------
+Adjusted learning rate to 0.00521
+Train ...
+Epoch: [93][ 0/97]	Loss 2.4013e-01 (2.4013e-01)
+Epoch: [93][25/97]	Loss 2.1674e-01 (2.3338e-01)
+Epoch: [93][50/97]	Loss 2.1703e-01 (2.2856e-01)
