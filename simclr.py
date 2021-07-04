@@ -12,7 +12,7 @@ from utils.common_config import get_criterion, get_model, get_train_dataset,\
                                 get_val_dataset, get_train_dataloader,\
                                 get_val_dataloader, get_train_transformations,\
                                 get_val_transformations, get_optimizer,\
-                                adjust_learning_rate
+                                adjust_learning_rate, 
 from utils.evaluate_utils import contrastive_evaluate
 from utils.memory import MemoryBank
 from utils.train_utils import simclr_train
@@ -104,11 +104,17 @@ def main():
 
         # Adjust lr
         lr = adjust_learning_rate(p, optimizer, epoch)
+        print('Adjusted learning rate to {:.5f}'.format(lr))
+
+    scheduler = StepLR(optimizer, step_size=30)
+    for epoch in range(start_epoch, p['epochs']):
+        scheduler.step()
         crop_scale = adjust_augmentation_parameters(p, optimizer, epoch)
         p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)
         p_grey = adjust_augmentation_parameters(p, optimizer, epoch)
-        print('Adjusted learning rate to {:.5f}'.format(lr))
-        
+        print('Adjusted p_jitter to {:.5f}'.format(p_jitter))
+        print('Adjusted p_grey to {:.5f}'.format(p_grey))
+
     for epoch in range(start_epoch, 100):
 
         # Train
