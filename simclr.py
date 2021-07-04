@@ -104,8 +104,13 @@ def main():
 
         # Adjust lr
         lr = adjust_learning_rate(p, optimizer, epoch)
+        crop_scale = adjust_augmentation_parameters(p, optimizer, epoch)
+        p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)
+        p_grey = adjust_augmentation_parameters(p, optimizer, epoch)
         print('Adjusted learning rate to {:.5f}'.format(lr))
         
+    for epoch in range(start_epoch, 100):
+
         # Train
         print('Train ...')
         simclr_train(train_dataloader, model, criterion, optimizer, epoch)

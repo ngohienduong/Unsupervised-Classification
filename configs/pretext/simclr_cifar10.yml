@@ -18,7 +18,7 @@ criterion_kwargs:
    temperature: 0.1 
 
 # Hyperparameters
-epochs: 500
+epochs: 100
 optimizer: sgd
 optimizer_kwargs:
    nesterov: False
@@ -36,9 +36,9 @@ augmentation_strategy: simclr
 augmentation_kwargs:
    random_resized_crop:
       size: 32
-      scale: [0.2, 1.0]
+      scale: [0.2, 1]
    color_jitter_random_apply:
-      p: 0.8
+      p: 0.2
    color_jitter:
       brightness: 0.4
       contrast: 0.4
