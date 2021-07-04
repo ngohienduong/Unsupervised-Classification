@@ -12,7 +12,7 @@ from utils.common_config import get_criterion, get_model, get_train_dataset,\
                                 get_val_dataset, get_train_dataloader,\
                                 get_val_dataloader, get_train_transformations,\
                                 get_val_transformations, get_optimizer,\
-                                adjust_learning_rate, 
+                                adjust_learning_rate, adjust_augmentation_parameters
 from utils.evaluate_utils import contrastive_evaluate
 from utils.memory import MemoryBank
 from utils.train_utils import simclr_train
