@@ -106,9 +106,9 @@ def main():
         print('Adjusted learning rate to {:.5f}'.format(lr))
 
     for epoch in range(start_epoch, p['epochs']):
-        crop_scale = adjust_augmentation_parameters(p, optimizer, epoch)
-        p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)
-        p_grey = adjust_augmentation_parameters(p, optimizer, epoch)
+        crop_scale = adjust_augmentation_parameters(p, optimizer, epoch)[0]
+        p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)[1]
+        p_grey = adjust_augmentation_parameters(p, optimizer, epoch)[2]
         print('Adjusted p_jitter to {:.5f}'.format(p_jitter))
         print('Adjusted p_grey to {:.5f}'.format(p_grey))
 
