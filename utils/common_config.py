@@ -302,9 +302,12 @@ def adjust_learning_rate(p, optimizer, epoch):
 
 def adjust_augmentation_parameters(p, optimizer, epoch):
     crop_scale = p['augmentation_kwargs']['random_resized_crop']['scale']
-    crop_scale = crop_scale + [0.4/p['epochs']*epoch, 0]
+# Crop scale 0.4 - 0.1
+    crop_scale = crop_scale + [0.4 - (0.3*epoch/p['epochs']), 0]
+# Probability Jitter 0.6 - 0.9
     p_jitter = p['augmentation_kwargs']['color_jitter_random_apply']['p']
-    p_jitter = p_jitter + + 0.6/p['epochs']*epoch
+    p_jitter = p_jitter + 0.3/p['epochs']*epoch
+# Probability Grey 0.1 - 0.3
     p_grey = p['augmentation_kwargs']['random_grayscale']['p']
-    p_grey = p_grey + + 0.6/p['epochs']*epoch
+    p_grey = p_grey + 0.2/p['epochs']*epoch
     return crop_scale, p_jitter, p_grey
