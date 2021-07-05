@@ -6,7 +6,6 @@ import argparse
 import os
 import torch
 import numpy as np
-
 from utils.config import create_config
 from utils.common_config import get_criterion, get_model, get_train_dataset,\
                                 get_val_dataset, get_train_dataloader,\
@@ -106,9 +105,7 @@ def main():
         lr = adjust_learning_rate(p, optimizer, epoch)
         print('Adjusted learning rate to {:.5f}'.format(lr))
 
-    scheduler = StepLR(optimizer, step_size=30)
     for epoch in range(start_epoch, p['epochs']):
-        scheduler.step()
         crop_scale = adjust_augmentation_parameters(p, optimizer, epoch)
         p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)
         p_grey = adjust_augmentation_parameters(p, optimizer, epoch)
