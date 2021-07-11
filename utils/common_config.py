@@ -217,13 +217,14 @@ def get_train_transformations(p):
     elif p['augmentation_strategy'] == 'simclr_base':
         # Augmentation strategy from the SimCLR paper\
         return transforms.Compose([
-            transform.RandomChoice(
+            transforms.RandomChoice(
                 transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomApply([
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
                 ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
-                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])))
+                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])
+                ),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])
@@ -231,13 +232,14 @@ def get_train_transformations(p):
     elif p['augmentation_strategy'] == 'simclr_cont':
         # Augmentation strategy from the SimCLR paper\
         return transforms.Compose([
-            transform.RandomChoice(
+            transforms.RandomChoice(
                 transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomApply([
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
                 ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
-                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])))
+                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])
+                ),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])
@@ -319,11 +321,11 @@ def adjust_augmentation_parameters(p, optimizer, epoch):
     crop_scale = p['augmentation_kwargs']['random_resized_crop']['scale']
     p_jitter = p['augmentation_kwargs']['color_jitter_random_apply']['p']
     p_grey = p['augmentation_kwargs']['random_grayscale']['p']
-    p['augmentation_strategy'] == 'simclr_base'
+    if p['augmentation_strategy'] == 'simclr_base'
         crop_scale = crop_scale
         p_jitter = p_jitter
         p_grey = p_grey
-    p['augmentation_strategy'] == 'simclr_cont'
+    elif p['augmentation_strategy'] == 'simclr_cont'
 # Crop scale 0.4 - 0.1
         crop_scale = crop_scale + [0.4 - (0.3*epoch/p['epochs']), 0]
 # Probability Jitter 0.6 - 0.

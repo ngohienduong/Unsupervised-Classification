@@ -1,5 +1,6 @@
 # Setup
 setup: simclr
+
 # Model
 backbone: resnet18
 model_kwargs:
@@ -17,7 +18,7 @@ criterion_kwargs:
    temperature: 0.1 
 
 # Hyperparameters
-epochs: 500
+epochs: 120
 optimizer: sgd
 optimizer_kwargs:
    nesterov: False
@@ -31,20 +32,20 @@ batch_size: 512
 num_workers: 8
 
 # Transformations
-augmentation_strategy: simclr_base
+augmentation_strategy: simclr _base
 augmentation_kwargs:
    random_resized_crop:
       size: 32
-      scale: [0.2, 1]
+      scale: [0.2, 1.0]
    color_jitter_random_apply:
-      p: 0.3
+      p: 0.8
    color_jitter:
       brightness: 0.4
       contrast: 0.4
       saturation: 0.4
       hue: 0.1
    random_grayscale: 
-      p: 0.1
+      p: 0.2
    normalize:
       mean: [0.4914, 0.4822, 0.4465]
       std: [0.2023, 0.1994, 0.2010]
