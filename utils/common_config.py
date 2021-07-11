@@ -205,17 +205,8 @@ def get_val_dataloader(p, dataset):
 
 
 def get_train_transformations(p):
-    if p['augmentation_strategy'] == 'standard':
+    if p['augmentation_strategy'] == 'simclr_union':
         # Standard augmentation strategy
-        return transforms.Compose([
-            transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(**p['augmentation_kwargs']['normalize'])
-        ])
-    
-    elif p['augmentation_strategy'] == 'simclr_base':
-        # Augmentation strategy from the SimCLR paper\
         return transforms.Compose([
             transforms.RandomChoice([
                 transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
@@ -228,9 +219,21 @@ def get_train_transformations(p):
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])
+    
+    elif p['augmentation_strategy'] == 'simclr_base':
+        # Augmentation strategy from the SimCLR paper\
+        return transforms.Compose([
+            transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomApply([
+                transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
+            ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
+            transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale']),
+            transforms.ToTensor(),
+            transforms.Normalize(**p['augmentation_kwargs']['normalize'])
+        ])
 
     elif p['augmentation_strategy'] == 'simclr_cont':
-        # Augmentation strategy from the SimCLR paper\
         return transforms.Compose([
             transforms.RandomChoice([
                 transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
@@ -245,7 +248,6 @@ def get_train_transformations(p):
         ])
     
     elif p['augmentation_strategy'] == 'simclr_perspective':
-        # Augmentation strategy from our paper 
         return transforms.Compose([
             transforms.RandomChoice([
                 transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
@@ -254,7 +256,7 @@ def get_train_transformations(p):
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
                 ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
                 transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale']),
-                transforms.RandomPerspective(distortion_scale = 0.5, p = 0.5)]
+                transforms.RandomPerspective(distortion_scale = 0.8, p = 1)]
                 ),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
@@ -324,15 +326,15 @@ def adjust_augmentation_parameters(p, optimizer, epoch):
     crop_scale = p['augmentation_kwargs']['random_resized_crop']['scale']
     p_jitter = p['augmentation_kwargs']['color_jitter_random_apply']['p']
     p_grey = p['augmentation_kwargs']['random_grayscale']['p']
-    if p['augmentation_strategy'] == 'simclr_base':
-        crop_scale = crop_scale
-        p_jitter = p_jitter
-        p_grey = p_grey
-    elif p['augmentation_strategy'] == 'simclr_cont':
+    if p['augmentation_strategy'] == 'simclr_cont':
 # Crop scale 0.4 - 0.1
         crop_scale = crop_scale + [0.4 - (0.3*epoch/p['epochs']), 0]
 # Probability Jitter 0.6 - 0.
         p_jitter = p_jitter + 0.3/p['epochs']*epoch
 # Probability Grey 0.1 - 0.3
         p_grey = p_grey + 0.2/p['epochs']*epoch
+    else:
+        crop_scale = crop_scale
+        p_jitter = p_jitter
+        p_grey = p_grey
     return crop_scale, p_jitter, p_grey
