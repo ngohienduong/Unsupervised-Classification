@@ -1,6 +1,5 @@
 # Setup
 setup: simclr
-
 # Model
 backbone: resnet18
 model_kwargs:
@@ -32,7 +31,7 @@ batch_size: 512
 num_workers: 8
 
 # Transformations
-augmentation_strategy: simclr 
+augmentation_strategy: simclr_cont
 augmentation_kwargs:
    random_resized_crop:
       size: 32
