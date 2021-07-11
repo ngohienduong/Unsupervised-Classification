@@ -32,7 +32,7 @@ batch_size: 512
 num_workers: 8
 
 # Transformations
-augmentation_strategy: simclr _base
+augmentation_strategy: simclr_base
 augmentation_kwargs:
    random_resized_crop:
       size: 32
