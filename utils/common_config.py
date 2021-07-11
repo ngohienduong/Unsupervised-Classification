@@ -321,11 +321,11 @@ def adjust_augmentation_parameters(p, optimizer, epoch):
     crop_scale = p['augmentation_kwargs']['random_resized_crop']['scale']
     p_jitter = p['augmentation_kwargs']['color_jitter_random_apply']['p']
     p_grey = p['augmentation_kwargs']['random_grayscale']['p']
-    if p['augmentation_strategy'] == 'simclr_base'
+    if p['augmentation_strategy'] == 'simclr_base':
         crop_scale = crop_scale
         p_jitter = p_jitter
         p_grey = p_grey
-    elif p['augmentation_strategy'] == 'simclr_cont'
+    elif p['augmentation_strategy'] == 'simclr_cont':
 # Crop scale 0.4 - 0.1
         crop_scale = crop_scale + [0.4 - (0.3*epoch/p['epochs']), 0]
 # Probability Jitter 0.6 - 0.
