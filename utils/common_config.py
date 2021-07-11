@@ -244,18 +244,21 @@ def get_train_transformations(p):
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])
     
-    elif p['augmentation_strategy'] == 'ours':
+    elif p['augmentation_strategy'] == 'simclr_perspective':
         # Augmentation strategy from our paper 
         return transforms.Compose([
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomCrop(p['augmentation_kwargs']['crop_size']),
-            Augment(p['augmentation_kwargs']['num_strong_augs']),
+            transforms.RandomChoice([
+                transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomApply([
+                    transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
+                ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
+                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale']),
+                transforms.RandomPerspective(distortion_scale = 0.5, p = 0.5)]
+                ),
             transforms.ToTensor(),
-            transforms.Normalize(**p['augmentation_kwargs']['normalize']),
-            Cutout(
-                n_holes = p['augmentation_kwargs']['cutout_kwargs']['n_holes'],
-                length = p['augmentation_kwargs']['cutout_kwargs']['length'],
-                random = p['augmentation_kwargs']['cutout_kwargs']['random'])])
+            transforms.Normalize(**p['augmentation_kwargs']['normalize'])
+        ])
     
     else:
         raise ValueError('Invalid augmentation strategy {}'.format(p['augmentation_strategy']))
