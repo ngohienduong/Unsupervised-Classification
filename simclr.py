@@ -103,16 +103,18 @@ def main():
 
         # Adjust lr
         lr = adjust_learning_rate(p, optimizer, epoch)
-        print('Adjusted learning rate to {:.5f}'.format(lr))
         crop_scale = adjust_augmentation_parameters(p, optimizer, epoch)[0]
         p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)[1]
         p_grey = adjust_augmentation_parameters(p, optimizer, epoch)[2]
-        print('Adjusted p_jitter to {:.5f}'.format(p_jitter))
-        print('Adjusted p_grey to {:.5f}'.format(p_grey))
+
+
         # Train
         print('Train ...')
         simclr_train(train_dataloader, model, criterion, optimizer, epoch)
 
+
+        # Evaluate (To monitor progress - Not for validation)
+        top1 = contrastive_evaluate(val_dataloader, model, memory_bank_base)
         print('Result of kNN evaluation is %.2f' %(top1)) 
         
         # Checkpoint
@@ -125,23 +127,17 @@ def main():
 
     # Mine the topk nearest neighbors at the very end (Train) 
     # These will be served as input to the SCAN loss.
-    print(colored('Fill memory bank for mining the nearest neighbors (train) ...', 'blue'))
     fill_memory_bank(base_dataloader, model, memory_bank_base)
     topk = 20
-    print('Mine the nearest neighbors (Top-%d)' %(topk)) 
     indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
-    print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
     np.save(p['topk_neighbors_train_path'], indices)   
 
    
     # Mine the topk nearest neighbors at the very end (Val)
     # These will be used for validation.
-    print(colored('Fill memory bank for mining the nearest neighbors (val) ...', 'blue'))
     fill_memory_bank(val_dataloader, model, memory_bank_val)
     topk = 5
-    print('Mine the nearest neighbors (Top-%d)' %(topk)) 
     indices, acc = memory_bank_val.mine_nearest_neighbors(topk)
-    print('Accuracy of top-%d nearest neighbors on val set is %.2f' %(topk, 100*acc))
     np.save(p['topk_neighbors_val_path'], indices)   
 
  
