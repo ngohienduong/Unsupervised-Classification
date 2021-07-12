@@ -109,19 +109,10 @@ def main():
         p_grey = adjust_augmentation_parameters(p, optimizer, epoch)[2]
         print('Adjusted p_jitter to {:.5f}'.format(p_jitter))
         print('Adjusted p_grey to {:.5f}'.format(p_grey))
-
-
         # Train
         print('Train ...')
         simclr_train(train_dataloader, model, criterion, optimizer, epoch)
 
-        # Fill memory bank
-        print('Fill memory bank for kNN...')
-        fill_memory_bank(base_dataloader, model, memory_bank_base)
-
-        # Evaluate (To monitor progress - Not for validation)
-        print('Evaluate ...')
-        top1 = contrastive_evaluate(val_dataloader, model, memory_bank_base)
         print('Result of kNN evaluation is %.2f' %(top1)) 
         
         # Checkpoint
