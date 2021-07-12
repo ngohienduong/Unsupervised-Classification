@@ -107,6 +107,7 @@ def main():
         p_jitter = adjust_augmentation_parameters(p, optimizer, epoch)[1]
         p_grey = adjust_augmentation_parameters(p, optimizer, epoch)[2]
 
+        fill_memory_bank(base_dataloader, model, memory_bank_base)
 
         # Train
         print('Train ...')
