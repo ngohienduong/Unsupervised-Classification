@@ -1,10 +1,54 @@
 # List of augmentations based on randaugment
 import random
-
+import kornia
 import PIL, PIL.ImageOps, PIL.ImageEnhance, PIL.ImageDraw
 import numpy as np
 import torch
 from torchvision.transforms.transforms import Compose
+import warnings
+from typing import cast, Dict, List, Optional, Tuple, Union
+
+import torch
+from torch.nn.functional import pad
+
+from kornia.augmentation.base import GeometricAugmentationBase2D, IntensityAugmentationBase2D, TensorWithTransformMat
+from kornia.color import rgb_to_grayscale
+from kornia.constants import BorderType, pi, Resample, SamplePadding
+from kornia.enhance import (
+    adjust_brightness,
+    adjust_contrast,
+    adjust_hue,
+    adjust_saturation,
+    equalize,
+    invert,
+    posterize,
+    sharpness,
+    solarize,
+)
+from kornia.enhance.normalize import denormalize, normalize
+from kornia.filters import box_blur, gaussian_blur2d, motion_blur
+from kornia.geometry import (
+    affine,
+    crop_by_transform_mat,
+    deg2rad,
+    elastic_transform2d,
+    get_affine_matrix2d,
+    get_perspective_transform,
+    get_tps_transform,
+    hflip,
+    remap,
+    resize,
+    vflip,
+    warp_affine,
+    warp_image_tps,
+    warp_perspective,
+)
+from kornia.geometry.bbox import bbox_generator, bbox_to_mask
+from kornia.geometry.transform.affwarp import _compute_rotation_matrix, _compute_tensor_center
+from kornia.utils import _extract_device_dtype, create_meshgrid
+
+from . import random_generator as rg
+from .utils import _range_bound, _transform_input
 
 random_mirror = True
 
@@ -146,3 +190,95 @@ class Cutout(object):
         img = img * mask
 
         return img
+
+class RandomPerspective(GeometricAugmentationBase2D):
+    r"""Applies a random perspective transformation to an image tensor with a given probability.
+
+    .. image:: _static/img/RandomPerspective.png
+
+    Args:
+        p: probability of the image being perspectively transformed..
+        distortion_scale: it controls the degree of distortion and ranges from 0 to 1.
+        resample: the interpolation method to use.
+        return_transform: if ``True`` return the matrix describing the transformation
+                          applied to each.
+        same_on_batch: apply the same transformation across the batch. Default: False.
+        align_corners: interpolation flag.
+        keepdim: whether to keep the output shape the same as input (True) or broadcast it
+                 to the batch form (False).
+
+    Shape:
+        - Input: :math:`(C, H, W)` or :math:`(B, C, H, W)`, Optional: :math:`(B, 3, 3)`
+        - Output: :math:`(B, C, H, W)`
+
+    .. note::
+        This function internally uses :func:`kornia.geometry.transform.warp_pespective`.
+
+    Examples:
+        >>> rng = torch.manual_seed(0)
+        >>> inputs= torch.tensor([[[[1., 0., 0.],
+        ...                         [0., 1., 0.],
+        ...                         [0., 0., 1.]]]])
+        >>> aug = RandomPerspective(0.5, p=0.5)
+        >>> out = aug(inputs)
+        >>> out
+        tensor([[[[0.0000, 0.2289, 0.0000],
+                  [0.0000, 0.4800, 0.0000],
+                  [0.0000, 0.0000, 0.0000]]]])
+        >>> aug.inverse(out)
+        tensor([[[[0.0500, 0.0961, 0.0000],
+                  [0.2011, 0.3144, 0.0000],
+                  [0.0031, 0.0130, 0.0053]]]])
+    """
+
+    def __init__(
+        self,
+        distortion_scale: Union[torch.Tensor, float] = 0.5,
+        resample: Union[str, int, Resample] = Resample.BILINEAR.name,
+        return_transform: bool = False,
+        same_on_batch: bool = False,
+        align_corners: bool = False,
+        p: float = 0.5,
+        keepdim: bool = False,
+    ) -> None:
+        super(RandomPerspective, self).__init__(
+            p=p, return_transform=return_transform, same_on_batch=same_on_batch, keepdim=keepdim
+        )
+        self._device, self._dtype = _extract_device_dtype([distortion_scale])
+        self.distortion_scale = distortion_scale
+        self.resample: Resample = Resample.get(resample)
+        self.align_corners = align_corners
+        self.flags: Dict[str, torch.Tensor] = dict(
+            interpolation=torch.tensor(self.resample.value), align_corners=torch.tensor(align_corners)
+        )
+
+    def __repr__(self) -> str:
+        repr = (
+            f"distortion_scale={self.distortion_scale}, interpolation={self.resample.name}, "
+            f"align_corners={self.align_corners}"
+        )
+        return self.__class__.__name__ + f"({repr}, {super().__repr__()})"
+
+    def generate_parameters(self, batch_shape: torch.Size) -> Dict[str, torch.Tensor]:
+        distortion_scale = torch.as_tensor(self.distortion_scale, device=self._device, dtype=self._dtype)
+        return rg.random_perspective_generator(
+            batch_shape[0],
+            batch_shape[-2],
+            batch_shape[-1],
+            distortion_scale,
+            self.same_on_batch,
+            self.device,
+            self.dtype,
+        )
+
+    def compute_transformation(self, input: torch.Tensor, params: Dict[str, torch.Tensor]) -> torch.Tensor:
+        return get_perspective_transform(params['start_points'].to(input), params['end_points'].to(input))
+
+    def apply_transform(
+        self, input: torch.Tensor, params: Dict[str, torch.Tensor], transform: Optional[torch.Tensor] = None
+    ) -> torch.Tensor:
+        _, _, height, width = input.shape
+        transform = cast(torch.Tensor, transform)
+        return warp_perspective(
+            input, transform, (height, width), mode=self.resample.name.lower(), align_corners=self.align_corners
+        )

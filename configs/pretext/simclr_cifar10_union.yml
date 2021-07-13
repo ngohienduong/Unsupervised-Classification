@@ -2,7 +2,7 @@
 setup: simclr
 
 # Model
-backbone: resnet50
+backbone: resnet18
 model_kwargs:
    head: mlp
    features_dim: 128
