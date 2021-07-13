@@ -7,7 +7,7 @@ import math
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-from data.augment import Augment, Cutout, RandomPerspective
+from data.augment import Augment, Cutout
 from utils.collate import collate_custom
 
  
@@ -215,7 +215,7 @@ def get_train_transformations(p):
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
                     ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
                     transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])]),
-                 RandomPerspective(p = 1, distortion_scale = 0.3,)
+                transforms.RandomAffine(degrees=40, scale=(.9, 1.1), shear=0),
             ]),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
