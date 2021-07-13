@@ -205,17 +205,18 @@ def get_val_dataloader(p, dataset):
 
 
 def get_train_transformations(p):
-    if p['augmentation_strategy'] == 'simclr_union':
+    if p['augmentation_strategy'] == 'cifar_union':
         # Standard augmentation strategy
         return transforms.Compose([
             transforms.RandomChoice([
-                transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomApply([
+                transforms.Compose([
+                    transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
+                    transforms.RandomApply([
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
-                ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
-                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])]
-                ),
+                    ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
+                    transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])]),
+                 transforms.RandomPerspective(distortion_scale = 0.3, p = 1)
+            ]),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])
@@ -229,20 +230,6 @@ def get_train_transformations(p):
                 transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
             ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
             transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale']),
-            transforms.ToTensor(),
-            transforms.Normalize(**p['augmentation_kwargs']['normalize'])
-        ])
-
-    elif p['augmentation_strategy'] == 'simclr_cont':
-        return transforms.Compose([
-            transforms.RandomChoice([
-                transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomApply([
-                    transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
-                ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
-                transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])]
-                ),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])

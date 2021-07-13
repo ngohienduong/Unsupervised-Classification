@@ -2,15 +2,15 @@
 setup: simclr
 
 # Model
-backbone: resnet18
+backbone: resnet50
 model_kwargs:
    head: mlp
    features_dim: 128
 
 # Dataset
-train_db_name: cifar-10
-val_db_name: cifar-10
-num_classes: 10
+train_db_name: cifar-20
+val_db_name: cifar-20
+num_classes: 20
 
 # Loss
 criterion: simclr
@@ -32,7 +32,7 @@ batch_size: 512
 num_workers: 8
 
 # Transformations
-augmentation_strategy: simclr_union
+augmentation_strategy: cifar_union
 augmentation_kwargs:
    random_resized_crop:
       size: 32
