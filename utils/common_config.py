@@ -215,7 +215,6 @@ def get_train_transformations(p):
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
                     ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
                     transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale'])]),
-                transforms.RandomAffine(degrees=40, scale=(.9, 1.1), shear=0),
             ]),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
