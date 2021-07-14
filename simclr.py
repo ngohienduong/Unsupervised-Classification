@@ -118,6 +118,10 @@ def main():
         top1 = contrastive_evaluate(val_dataloader, model, memory_bank_base)
         print('Result of kNN evaluation is %.2f' %(top1)) 
         
+        print('Evaluate with hungarian matching algorithm ...')
+        clustering_stats = hungarian_evaluate(lowest_loss_head, predictions, compute_confusion_matrix=False)
+        print(clustering_stats) 
+
         # Checkpoint
         print('Checkpoint ...')
         torch.save({'optimizer': optimizer.state_dict(), 'model': model.state_dict(), 
