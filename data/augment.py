@@ -5,6 +5,7 @@ import PIL, PIL.ImageOps, PIL.ImageEnhance, PIL.ImageDraw
 import numpy as np
 import torch
 from torchvision.transforms.transforms import Compose
+import imgaug.augmenters as iaa
 
 random_mirror = True
 
@@ -75,6 +76,10 @@ def Brightness(img, v):
 
 def Sharpness(img, v):
     return PIL.ImageEnhance.Sharpness(img).enhance(v)
+
+def Elastic(img):
+    aug = iaa.ElasticTransformation(alpha=(0, 5.0), sigma=0.25)
+    return aug(img)
 
 def augment_list():
     l = [

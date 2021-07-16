@@ -242,7 +242,7 @@ def get_train_transformations(p):
                     transforms.ColorJitter(**p['augmentation_kwargs']['color_jitter'])
                 ], p=p['augmentation_kwargs']['color_jitter_random_apply']['p']),
                 transforms.RandomGrayscale(**p['augmentation_kwargs']['random_grayscale']),
-                transforms.RandomPerspective(distortion_scale = 0.8, p = 1)]
+                Elastic()]
                 ),
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
